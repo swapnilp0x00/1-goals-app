@@ -5,10 +5,12 @@ import GoalInput from './components/GoalInput';
 
 export default function App() {
   const [goals, setGoals] = useState<{id: string, value: string}[]>([]);
+  const [isAddModal, setIsAddModal] = useState(false);
 
   const addGoalHandler = (goal: string) => {
-    console.log(goal);
+    // console.log(goal);
     setGoals((prevState) => [...prevState,  {id: Math.random().toString(), value: goal}]);
+    setIsAddModal(false);
   };
 
   const deleteGoalHandler = (goalId: string) => {
@@ -17,9 +19,14 @@ export default function App() {
     });
   };
 
+  const cancelGoalAdditionHandler = () => {
+    setIsAddModal(false);
+  }
+
   return (
     <View style={styles.screen}>
-      <GoalInput onGoalAdd={addGoalHandler}/>
+      <Button title="Add Goal" onPress={() => { setIsAddModal(true)}}></Button>
+      <GoalInput visible={isAddModal} onGoalAdd={addGoalHandler} onCancel={cancelGoalAdditionHandler}/>
       <FlatList 
         data={goals} 
         renderItem={itemData => <GoalItem id={itemData.item.id} onDelete={deleteGoalHandler} value={itemData.item.value}/>}
